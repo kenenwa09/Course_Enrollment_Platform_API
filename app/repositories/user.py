@@ -25,7 +25,7 @@ class UserRespository:
     async def get_all(db: AsyncSession, skip: int = 0, limit: int = 20) -> list[User]:
         stmt = select(User).offset(skip).limit(limit)
         result = await db.execute(stmt)
-        return list(result.scalar().all())
+        return list(result.scalars().all())
     
     
     @staticmethod
@@ -33,7 +33,7 @@ class UserRespository:
         user = User(
             name=data.name,
             email=data.email,
-            hash_password=hash_password(data.password),
+            hashed_password=hash_password(data.password),
             role=data.role
         )
         db.add(user)

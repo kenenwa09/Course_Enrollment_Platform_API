@@ -26,7 +26,7 @@ class EnrollmentRepository:
     async def get_user_enrollments(db: AsyncSession, user_id: int, skip: int = 0, limit: int = 20) -> list[Enrollment]:
         stmt = select(Enrollment).where(Enrollment.user_id == user_id).options(selectinload(Enrollment.course)).offset(skip).limit(limit)
         result = await db.execute(stmt)
-        return list(result.scalar().all())
+        return list(result.scalars().all())
     
     
     
@@ -34,7 +34,7 @@ class EnrollmentRepository:
     async def get_course_enrollments(db: AsyncSession, course_id: int, skip: int = 0, limit: int = 20) -> list[Enrollment] | None:
         stmt = select(Enrollment).where(Enrollment.course_id == course_id).options(selectinload(Enrollment.user)).offset(skip).limit(limit)
         result = await db.execute(stmt)
-        return list(result.scalar().all())
+        return list(result.scalars().all())
     
     
     

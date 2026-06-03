@@ -24,7 +24,7 @@ class CourseRepository:
     async def get_all(db: AsyncSession, skip: int = 0, limit: int = 20) -> list[Course]:
         stmt = select(Course).offset(skip).limit(limit)
         result = await db.execute(stmt)
-        return list(result.scalar().all())
+        return list(result.scalars().all())
     
     
     @staticmethod
