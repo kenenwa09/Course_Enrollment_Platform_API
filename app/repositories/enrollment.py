@@ -39,6 +39,21 @@ class EnrollmentRepository:
     
     
     @staticmethod
+    async def get_all_enrollments(db: AsyncSession, skip: int = 0, limit: int = 20,) -> list[Enrollment]:
+        stmt = (
+            select(Enrollment)
+            .options(selectinload(Enrollment.user))
+            .options(selectinload(Enrollment.course))
+            .offset(skip)
+            .limit(limit)
+        )
+        
+        result = await db.execute(stmt)
+        return list(result.scalars().all())
+        
+    
+    
+    @staticmethod
     async def create(db: AsyncSession, user_id: int, data: EnrollmentCreate) -> Enrollment:
         enrollment = Enrollment(
             user_id=user_id,
