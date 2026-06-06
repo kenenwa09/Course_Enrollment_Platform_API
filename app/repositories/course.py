@@ -1,6 +1,7 @@
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.course import Course
+from app.models.enrollment import Enrollment
 from app.schemas.course import CourseCreate, CourseUpdate
 
 
@@ -56,4 +57,11 @@ class CourseRepository:
     @staticmethod
     async def delete(db: AsyncSession, course: Course) -> None:
         await db.delete(course)
-        await db.commit()    
+        await db.commit()   
+        
+        
+        
+    async def get_enrollment_count(self, db: AsyncSession, course_id: int) -> int:
+        stmt = select(func.count()).where(Enrollment.course_id == course_id)
+        result = await db.execute(stmt)
+        return result.scalar_one()     
