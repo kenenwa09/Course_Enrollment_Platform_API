@@ -10,7 +10,7 @@ from app.models.users import User
 
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/api/auth/login",
+    tokenUrl="/api/v1/auth/token",
     auto_error=True
 )
 

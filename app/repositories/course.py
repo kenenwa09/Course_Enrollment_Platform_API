@@ -1,4 +1,4 @@
-from sqlalchemy import select, func
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.course import Course
 from app.models.enrollment import Enrollment
@@ -22,8 +22,11 @@ class CourseRepository:
     
     
     @staticmethod
-    async def get_all(db: AsyncSession, skip: int = 0, limit: int = 20) -> list[Course]:
-        stmt = select(Course).offset(skip).limit(limit)
+    async def get_all(db: AsyncSession, skip: int = 0, limit: int = 20, active_only: bool = False) -> list[Course]:
+        stmt = select(Course)
+        if active_only:
+            stmt = stmt.where(Course.is_active == True)
+        stmt = stmt.offset(skip).limit(limit)
         result = await db.execute(stmt)
         return list(result.scalars().all())
     
@@ -60,8 +63,9 @@ class CourseRepository:
         await db.commit()   
         
         
-        
-    async def get_enrollment_count(self, db: AsyncSession, course_id: int) -> int:
+    @staticmethod    
+    async def get_enrollment_count(db: AsyncSession, course_id: int) -> int:
+        from sqlalchemy import select, func
         stmt = select(func.count()).where(Enrollment.course_id == course_id)
         result = await db.execute(stmt)
         return result.scalar_one()     

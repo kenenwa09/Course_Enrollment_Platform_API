@@ -7,7 +7,7 @@ from app.models.course import Course
 class CourseService:
     
     @staticmethod
-    async def get_course(self, db: AsyncSession, course_id: int) -> Course:
+    async def get_course(db: AsyncSession, course_id: int) -> Course:
         course = await CourseRepository.get_by_id(db, course_id)
         if not course:
             raise HTTPException(
@@ -19,19 +19,19 @@ class CourseService:
     
     
     @staticmethod
-    async def get_all(self, db: AsyncSession, skip: int = 0, limit: int = 20, active_only: bool = True) -> list[Course]:
+    async def get_all(db: AsyncSession, skip: int = 0, limit: int = 20, active_only: bool = True) -> list[Course]:
         return await CourseRepository.get_all(db, skip=skip, limit=limit, active_only=active_only)
     
     
     
     @staticmethod
-    async def get_by_id(self, db: AsyncSession, course_id: int) -> Course:
-        return await self.get_course(db, course_id)
+    async def get_by_id(db: AsyncSession, course_id: int) -> Course:
+        return await CourseService.get_course(db, course_id)
     
     
     
     @staticmethod
-    async def create(self, db: AsyncSession, data: CourseCreate) -> Course:
+    async def create(db: AsyncSession, data: CourseCreate) -> Course:
         existing = await CourseRepository.get_by_code(db, data.code)
         if existing:
             raise HTTPException(
@@ -45,8 +45,8 @@ class CourseService:
     
     
     @staticmethod
-    async def update(self, db: AsyncSession, course_id: int, data: CourseUpdate) -> Course:
-        course = await self.get_course(db, course_id)
+    async def update(db: AsyncSession, course_id: int, data: CourseUpdate) -> Course:
+        course = await CourseService.get_course(db, course_id)
         
         if data.code and data.code != course.code:
             existing = await CourseRepository.get_by_code(db, data.code)
@@ -62,6 +62,6 @@ class CourseService:
     
     
     @staticmethod
-    async def delete(self, db: AsyncSession, course_id: int) -> None:
-        course = await self.get_course(db, course_id)
+    async def delete(db: AsyncSession, course_id: int) -> None:
+        course = await CourseService.get_course(db, course_id)
         await CourseRepository.delete(db, course)        

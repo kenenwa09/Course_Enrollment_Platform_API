@@ -9,7 +9,7 @@ class CourseBase(BaseModel):
     
     
 class CourseCreate(CourseBase):
-    is_active = bool
+    is_active: bool = True
 
 
 class CourseUpdate(BaseModel):

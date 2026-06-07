@@ -10,7 +10,7 @@ from app.models.users import User
 class EnrollmentService:
     
     @staticmethod
-    async def enroll(self, db: AsyncSession, data: EnrollmentCreate, current_user: User) -> Enrollment:
+    async def enroll(db: AsyncSession, data: EnrollmentCreate, current_user: User) -> Enrollment:
         if current_user.role != "student":
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -45,7 +45,7 @@ class EnrollmentService:
         if count >= course.capacity:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="ourse has reached maximum capacity"
+                detail="Course has reached maximum capacity"
             )    
             
         return await EnrollmentRepository.create(db, current_user.id, data)
@@ -54,7 +54,7 @@ class EnrollmentService:
     
     
     @staticmethod
-    async def unenroll(self, db: AsyncSession, enrollment_id: int, current_user: User) -> None:
+    async def unenroll(db: AsyncSession, enrollment_id: int, current_user: User) -> None:
         enrollment = await EnrollmentRepository.get_by_id(db, enrollment_id)
         if not enrollment:
             raise HTTPException(
@@ -75,20 +75,20 @@ class EnrollmentService:
         
         
     @staticmethod
-    async def get_my_enrollments(self, db: AsyncSession, current_user: User, skip: int = 0, limit: int = 20) -> list[Enrollment]:
+    async def get_my_enrollments(db: AsyncSession, current_user: User, skip: int = 0, limit: int = 20) -> list[Enrollment]:
         return await EnrollmentRepository.get_user_enrollments(db, current_user.id, skip=skip, limit=limit)
     
     
     
     @staticmethod
-    async def get_all_enrollments(self, db: AsyncSession, skip: int = 0, limit: int = 20) -> list[Enrollment]:
+    async def get_all_enrollments(db: AsyncSession, skip: int = 0, limit: int = 20) -> list[Enrollment]:
         return await EnrollmentRepository.get_all_enrollments(db, skip=skip, limit=limit)
     
     
     
     
     @staticmethod
-    async def get_course_enrollments(self, db: AsyncSession, course_id: int, skip: int = 0, limit: int = 20) -> list[Enrollment]:
+    async def get_course_enrollments(db: AsyncSession, course_id: int, skip: int = 0, limit: int = 20) -> list[Enrollment]:
         course = await CourseRepository.get_by_id(db, course_id)
         if not course:
             raise HTTPException(
@@ -102,7 +102,7 @@ class EnrollmentService:
     
     
     @staticmethod
-    async def admin_remove_enrollment(self, db: AsyncSession, enrollment_id: int) -> None:
+    async def admin_remove_enrollment(db: AsyncSession, enrollment_id: int) -> None:
         enrollment = await EnrollmentRepository.get_by_id(db, enrollment_id)
         if not enrollment:
             raise HTTPException(
