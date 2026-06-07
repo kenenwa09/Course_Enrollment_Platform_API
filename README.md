@@ -342,3 +342,10 @@ pytest tests/test_enrollments.py -v
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | How long tokens stay valid | `30` |
 | `PROJECT_NAME` | Displayed in API docs title | `Course_Enrollment_platform_api` |
 | `API_PREFIX` | URL prefix applied to all routes | `/api/v1` |
+
+
+
+deployment link:  courseenrollmentplatformapi-production.up.railway.app
+
+
+Third semester exam from ALTSCHOOL AFRICA
