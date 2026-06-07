@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: enrollment_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: kene
+      POSTGRES_DB: Course_Enrollment_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: enrollment_api
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL_ASYNC: postgresql+asyncpg://postgres:kene@db/Course_Enrollment_db
+      DATABASE_URL: postgresql://postgres:kene@db/Course_Enrollment_db
+      ENVIRONMENT: DEBUG
+      SECRET_KEY: 963385a0b46baf8ffb1192d82d92ddbfc83100c125928b886b638e6f8d81a58d
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      PROJECT_NAME: Course_Enrollment_platform_api
+      API_PREFIX: /api/v1
+
+volumes:
+  postgres_data:
